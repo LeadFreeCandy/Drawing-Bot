@@ -4,6 +4,7 @@ import random as rd
 import time
 import math
 import sys
+import pickle
  
 def getAngle(a, b, c):
     ang = math.degrees(math.atan2(c[1]-b[1], c[0]-b[0]) - math.atan2(a[1]-b[1], a[0]-b[0]))
@@ -45,7 +46,7 @@ def check_close(xP,yP):
 
     return None
 
-input_img = cv2.imread('seansmall.jpg')
+input_img = cv2.imread('s1.jpg')
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (13,13), 0)
 edges = cv2.Canny(gray,0,40)
@@ -145,8 +146,8 @@ img[mask>0] = (255,255,255)
 
 for seg in segments:
 
-    # color = tuple(rd.randrange(0,255) for i in range(3))
-    color = (0,0,0)
+    color = tuple(rd.randrange(0,255) for i in range(3))
+    # color = (0,0,0)
 
     i = 0
     for i in range(len(seg)-1):
@@ -166,6 +167,9 @@ while i < len(segments):
         i-=1
     i+=1
 # for i in range(len(segments)):
+
+with open("path.pickle", 'wb') as file:
+    pickle.dump(segments, file)
     
 
 
