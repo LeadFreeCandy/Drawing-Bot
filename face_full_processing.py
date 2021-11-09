@@ -46,10 +46,10 @@ def check_close(xP,yP):
 
     return None
 
-input_img = cv2.imread('s1.jpg')
+input_img = cv2.imread('dp.jpg')
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
-gray = cv2.GaussianBlur(gray, (13,13), 0)
-edges = cv2.Canny(gray,0,40)
+gray = cv2.GaussianBlur(gray, (3,3), 0)
+edges = cv2.Canny(gray,0,30)
 # cv2.imwrite('edges.jpg',edges)
 
 
@@ -94,8 +94,8 @@ print("")
 print(f"took {time.time()-tt0: .2f} seconds to sort all {len(sortedPoints)} points")
 # filtered path = []
 splitDistance = 4 # number of pixels apart when points are broken into seperate segments
-angleCut = 25 # angle, lower == less agressive
-distanceCut = 8 # pixels, higher == more agressive
+angleCut = 10 # angle, lower == less agressive
+distanceCut = 3 # pixels, higher == more agressive
 minSegmentLen = 15 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
 segments = []
