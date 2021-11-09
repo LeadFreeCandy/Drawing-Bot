@@ -168,6 +168,13 @@ while i < len(segments):
     i+=1
 # for i in range(len(segments)):
 
+max_size = max(input_img.shape[:2])
+
+for i, seg in enumerate(segments):
+    for j, point in enumerate(seg):
+        segments[i][j] = (point[0]/max_size,point[1]/max_size)
+
+
 with open("path.pickle", 'wb') as file:
     pickle.dump(segments, file)
     
