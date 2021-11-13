@@ -5,7 +5,8 @@ import time
 import math
 import sys
 import pickle
- 
+
+filename = "img_2.png"
 def getAngle(a, b, c):
     ang = math.degrees(math.atan2(c[1]-b[1], c[0]-b[0]) - math.atan2(a[1]-b[1], a[0]-b[0]))
     return ang + 360 if ang < 0 else ang
@@ -46,7 +47,16 @@ def check_close(xP,yP):
 
     return None
 
-input_img = cv2.imread('ricardo.jpg')
+if filename.find(".jpg") == -1:
+    # Load .png image
+    image = cv2.imread(filename)
+
+    # Save .jpg image
+    cv2.imwrite('image.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+    input_img = cv2.imread("image.jpg")
+else:
+    input_img = cv2.imread(filename)
+
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (13,13), 0)
 edges = cv2.Canny(gray,0,25)
