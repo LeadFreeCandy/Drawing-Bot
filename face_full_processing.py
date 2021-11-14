@@ -5,7 +5,8 @@ import time
 import math
 import sys
 import pickle
- 
+
+filename = "img_2.png"
 def getAngle(a, b, c):
     ang = math.degrees(math.atan2(c[1]-b[1], c[0]-b[0]) - math.atan2(a[1]-b[1], a[0]-b[0]))
     return ang + 360 if ang < 0 else ang
@@ -46,10 +47,19 @@ def check_close(xP,yP):
 
     return None
 
-input_img = cv2.imread('s1.jpg')
+if filename.find(".jpg") == -1:
+    # Load .png image
+    image = cv2.imread(filename)
+
+    # Save .jpg image
+    cv2.imwrite('image.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
+    input_img = cv2.imread("image.jpg")
+else:
+    input_img = cv2.imread(filename)
+
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (13,13), 0)
-edges = cv2.Canny(gray,0,40)
+edges = cv2.Canny(gray,0,25)
 # cv2.imwrite('edges.jpg',edges)
 
 
@@ -94,9 +104,9 @@ print("")
 print(f"took {time.time()-tt0: .2f} seconds to sort all {len(sortedPoints)} points")
 # filtered path = []
 splitDistance = 4 # number of pixels apart when points are broken into seperate segments
-angleCut = 25 # angle, lower == less agressive
-distanceCut = 8 # pixels, higher == more agressive
-minSegmentLen = 15 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
+angleCut = 40 # angle, lower == less agressive
+distanceCut = 6 # pixels, higher == more agressive
+minSegmentLen = 20 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
 segments = []
 index = 0
@@ -168,12 +178,12 @@ while i < len(segments):
     i+=1
 # for i in range(len(segments)):
 
-max_dim = max(input_img.shape[0:2])
-for i, seg in enumerate(segments):
-    for j, val in enumerate(seg):
-        segments[i][j] = (val[0]/max_dim, val[1]/max_dim)
+max_size = max(input_img.shape[:2])
 
-# print(segments)
+for i, seg in enumerate(segments):
+    for j, point in enumerate(seg):
+        segments[i][j] = (point[0]/max_size,point[1]/max_size)
+
 
 with open("path.pickle", 'wb') as file:
     pickle.dump(segments, file)
