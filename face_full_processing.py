@@ -6,17 +6,16 @@ import math
 import sys
 import pickle
 
-filename = "ricardo.jpg"
+filename = "s1.jpg"
 
 blur_radius = 13 # must be an odd number
-lower_thresh = 0 
-upper_thresh = 40 # after extensive research, I am fairly certian that you only need to change this value...
+lower_thresh = 55
+upper_thresh = 60 # after extensive research, I am fairly certian that you only need to change this value...
 
 #TODO: Figure out why this breaks with a smaller number 
 splitDistance = 10 # number of pixels apart when points are broken into seperate segments 
-angleCut = 120 # angle, lower == less agressive
-distanceCut = 0 # pixels, higher == more agressive
-areaCut = 4
+
+areaCut = 15 
 
 minSegmentLen = 20 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
@@ -33,7 +32,9 @@ def getArea(a, b, c):
     l3 = distance(*c, *a)
 
     p = (l1 + l2 + l3)/2
-    area = math.sqrt(abs(p * (p - l1) * (p - l2) * (p - l3)))
+    area = abs(p * (p - l1) * (p - l2) * (p - l3))
+
+    # area *= l3
 
     return area
 
