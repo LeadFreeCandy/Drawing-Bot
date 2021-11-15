@@ -9,7 +9,7 @@ def calc_segment(seg, max_vel, max_accel, max_radius, frequency, john = "dumb"):
 
     # R = V^2/A
 
-    max_radius = 
+    max_radius = 0
 
 
     velocity = 0
