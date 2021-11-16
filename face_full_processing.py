@@ -61,7 +61,7 @@ else:
 facemap = facemesh.get_facemesh(filename)
 gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
 
-blur = cv2.GaussianBlur(gray, (21, 21), 0)
+blur = cv2.GaussianBlur(gray, (41, 41), 0)
 cv2.imwrite("blurred.jpg", blur)
 cv2.imwrite("facemesh.jpg", facemap)
 # cv2.imwrite('edges.jpg',edges)
@@ -72,6 +72,7 @@ for y in range(len(blur)):
             blur[x, y] = gray[x,y]
             print(f"moved {x}, {y}")
 
+blur = cv2.GaussianBlur(blur, (21, 21), 0)
 edges = cv2.Canny(blur, 0, 25)
 points = []
 for y in range(len(edges)):
