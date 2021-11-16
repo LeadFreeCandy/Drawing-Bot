@@ -60,8 +60,10 @@ else:
 
 facemap = facemesh.get_facemesh(filename)
 gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
-blur = cv2.GaussianBlur(gray, (13, 13), 0)
 
+blur = cv2.GaussianBlur(gray, (21, 21), 0)
+cv2.imwrite("blurred.jpg", blur)
+cv2.imwrite("facemesh.jpg", facemap)
 # cv2.imwrite('edges.jpg',edges)
 
 for y in range(len(blur)):
@@ -210,7 +212,7 @@ with open("path.pickle", 'wb') as file:
 print("{} segments with a total of {} points".format(len(segments), sum(len(seg) for seg in segments)))
 cv2.imwrite('houghlines6.jpg', img)
 cv2.imwrite('gray.jpg', gray)
-cv2.imwrite("blur.jpg", blur)
+cv2.imwrite("final.jpg", blur)
 
 
 edges = cv2.Canny(gray,0,40)
