@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-seg = [(0,1), (1,1), (2,0), (5,5)]
+seg = [(0,0), (.5,0), (1,0), (1,1), (.5,.5), (0,1), (0,0)]
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
@@ -51,7 +51,7 @@ def line_points(start_pos, end_pos, num_points):
     return points
 
 
-def calc_segment(seg, max_vel, max_accel, max_radius, frequency, john = "dumb"):
+def calc_segment(seg, max_accel, max_radius, john = "dumb"):
 
     # R = V^2/A
 
@@ -66,36 +66,42 @@ def calc_segment(seg, max_vel, max_accel, max_radius, frequency, john = "dumb"):
         bc_dist = distance(*b, *c)
         abc_angle = getAngle(a,b,c)
 
-        # l = (max_accel * ab_dist - velocity ** 2) / (3 * max_accel) # math n shit
+        if abc_angle == 180:
+            l = ab_dist
+            r = 0
+            lr = 0
+            vf = math.sqrt(velocity ** 2 + 2 * max_accel * l)
+        else:
+            # l = (max_accel * ab_dist - velocity ** 2) / (3 * max_accel) # math n shit
 
-        lr = min(ab_dist, bc_dist/2) #TODO: decide if max radius should govrn lr or r
-        r = (2 * sin(abc_angle/2) * lr) / abs(2 * sin(90-abc_angle/2))
-        
-        if r > max_radius:
-            r = max_radius
-            lr = (r * abs(2 * sin(90 - abc_angle/2)))/ (2 * sin(abc_angle/2))
+            lr = min(ab_dist, bc_dist/2) #TODO: decide if max radius should govrn lr or r
+            r = (2 * sin(abc_angle/2) * lr) / abs(2 * sin(90-abc_angle/2))
+            
+            if r > max_radius:
+                r = max_radius
+                lr = (r * abs(2 * sin(90 - abc_angle/2)))/ (2 * sin(abc_angle/2))
 
-        l = ab_dist - lr
-        vf = min(math.sqrt(velocity ** 2 + 2 * max_accel * l), math.sqrt(max_accel * r))
-        
-
-        # assert velocity - max_accel *l <= vf, 'does not have time to slow'
-        velocity = vf
-
-        # r = ab_dist - (max_accel * ab_dist - velocity ** 2) / (3 * max_accel)
-        # vf = math.sqrt(velocity ** 2 + 2 * max_accel * l)
+            l = ab_dist - lr
+            vf = min(math.sqrt(velocity ** 2 + 2 * max_accel * l), math.sqrt(max_accel * r))
+            
+            
+            assert velocity - max_accel *l <= vf, 'does not have time to slow'
 
 
-        r2_max = bc_dist - r
+            # r = ab_dist - (max_accel * ab_dist - velocity ** 2) / (3 * max_accel)
+            # vf = math.sqrt(velocity ** 2 + 2 * max_accel * l)
+
+
+        r2_max = min(bc_dist - lr, max_radius)
         vf2_max = math.sqrt(max_accel * r2_max)
 
-        # if vf > vf2_max: #velocity limited
-        #     raise "uh maybe dis code do be needed doe"
-        #     vf = vf2_max
-        #     l = (vf ** 2 - velocity ** 2) / (2 * max_accel)
-        #     r = ab_dist - l
+        if vf > vf2_max: #velocity limited
+            print("vel limited or smthing")
+            # raise "uh maybe dis code do be needed doe"
+            vf = vf2_max
+            
 
-        
+        velocity = vf
 
 
         # radius = min(radius, ab_dist/2, bc_dist/2)
@@ -120,14 +126,12 @@ def calc_segment(seg, max_vel, max_accel, max_radius, frequency, john = "dumb"):
             circle_center = (end_pos[0]+shifter[0], end_pos[1]+shifter[1])
         elif abc_angle < 180:
             circle_center = (end_pos[0]-shifter[0], end_pos[1]-shifter[1])
-        else:
-            raise "fuck"
-        points += [circle_center]
+        
 
-        # points += line_points(end_pos, new_pos, 100)
-
-        circle_center_offset = (circle_center[0]+1, circle_center[1])
-        points += arc_points(circle_center, r, getAngle(circle_center_offset, circle_center, end_pos), getAngle(circle_center_offset, circle_center, new_pos), 100)
+        if circle_center:
+            # points += [circle_center] # make sure axe dis shit
+            circle_center_offset = (circle_center[0]+1, circle_center[1])
+            points += arc_points(circle_center, r, getAngle(circle_center_offset, circle_center, end_pos), getAngle(circle_center_offset, circle_center, new_pos), 100)
 
     points += line_points(*seg[-2:], 100) 
     
@@ -136,6 +140,10 @@ def calc_segment(seg, max_vel, max_accel, max_radius, frequency, john = "dumb"):
 
 def plot_path(points):
     import matplotlib.pyplot as plt
+
+    # x,y = zip(*points)
+    x = [point[0] for point in points]
+
     plt.scatter(*zip(*points))
     plt.show()
 
@@ -144,7 +152,7 @@ def plot_path(points):
 
 if __name__ == "__main__":
     # print(calc_segment(seg, radius=))
-    points = calc_segment(seg, 1, 1, 1, 1)
+    points = calc_segment(seg, 1, .5)
     plot_path(points)
 
 
