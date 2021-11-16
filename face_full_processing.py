@@ -5,8 +5,9 @@ import time
 import math
 import sys
 import pickle
+import facemesh
 
-filename = "img_2.png"
+filename = "ricardo.jpg"
 def getAngle(a, b, c):
     ang = math.degrees(math.atan2(c[1]-b[1], c[0]-b[0]) - math.atan2(a[1]-b[1], a[0]-b[0]))
     return ang + 360 if ang < 0 else ang
@@ -57,13 +58,19 @@ if filename.find(".jpg") == -1:
 else:
     input_img = cv2.imread(filename)
 
+facemap = facemesh.get_facemesh(filename)
+gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (13, 13), 0)
 
-gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
-gray = cv2.GaussianBlur(gray, (13,13), 0)
-edges = cv2.Canny(gray,0,25)
 # cv2.imwrite('edges.jpg',edges)
 
+for y in range(len(blur)):
+    for x in range(len(blur[y])):
+        if facemap[x,y,0] == 0:
+            blur[x, y] = gray[x,y]
+            print(f"moved {x}, {y}")
 
+edges = cv2.Canny(blur, 0, 25)
 points = []
 for y in range(len(edges)):
     for x in range(len(edges[y])):
