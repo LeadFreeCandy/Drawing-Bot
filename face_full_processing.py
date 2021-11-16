@@ -57,6 +57,7 @@ if filename.find(".jpg") == -1:
 else:
     input_img = cv2.imread(filename)
 
+
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray, (13,13), 0)
 edges = cv2.Canny(gray,0,25)
