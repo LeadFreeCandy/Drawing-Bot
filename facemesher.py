@@ -17,8 +17,7 @@ with mp_face_mesh.FaceMesh(
     results = face_mesh.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
     # Print and draw face mesh landmarks on the image.
-    if not results.multi_face_landmarks:
-        continue
+
     annotated_image = image.copy()
     for face_landmarks in results.multi_face_landmarks:
         print('face_landmarks:', face_landmarks)
@@ -43,4 +42,5 @@ with mp_face_mesh.FaceMesh(
             landmark_drawing_spec=None,
             connection_drawing_spec=mp_drawing_styles
                 .get_default_face_mesh_iris_connections_style())
-    cv2.imwrite("mesh'd", annotated_image)
+    cv2.imshow("mesh'd", annotated_image)
+    cv2.waitKey(0)
