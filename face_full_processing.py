@@ -209,12 +209,14 @@ with open("path.pickle", 'wb') as file:
 
 print("{} segments with a total of {} points".format(len(segments), sum(len(seg) for seg in segments)))
 cv2.imwrite('houghlines6.jpg', img)
-
+cv2.imwrite('gray.jpg', gray)
+cv2.imwrite("blur.jpg", blur)
 
 
 edges = cv2.Canny(gray,0,40)
 display = np.concatenate((input_img, cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)), axis=1)
 display = np.concatenate((display, img), axis=1)
+
 
 cv2.imshow("images", display)
 cv2.waitKey(0)
