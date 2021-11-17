@@ -25,10 +25,14 @@ class Line():
         return str(f"<Line from {self.start_pos} to {self.end_pos} {self.start_vel=} {self.acceleration=}>")
 
     def get_len(self):
-        return distance(self.start_pos, self.end_pos)
+        return distance(*self.start_pos, *self.end_pos)
 
-    def max_accel(self):
+    def speed_delta(self):
         return self.get_len() * self.acceleration
+
+    @property
+    def end_vel(self):
+        return self.start_vel + self.speed_delta()
 
     def get_points_crude(self, num_points):
         points = []
@@ -58,6 +62,15 @@ class Arc():
         self.end_angle = end_angle
         pass
 
+    def __repr__(self):
+        return str(f"<Arc centered at {self.center_pos}, from {self.start_angle} to {self.end_angle} with radius {self.radius}>")
+
+    def max_accel(self, vel):
+
+        return vel ** 2 / self.radius
+
+    def max_speed(self, accel):
+        return math.sqrt(accel * self.radius)
     def get_points_crude(self, num_points):
        
         points = []

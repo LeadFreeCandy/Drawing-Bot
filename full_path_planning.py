@@ -2,7 +2,7 @@ import math
 import numpy as np
 from pieces import Line, Arc, sin, cos
 
-seg = [(0,0), (0,1), (1,1), (1,0)]
+seg = [(0,0), (0,5), (1,5)]
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
@@ -64,7 +64,9 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
             seg[i+1] = new_pos
 
             # points += line_points(a, end_pos, 100)
-            parts.append(Line(a, end_pos))
+
+            if a != end_pos:
+                parts.append(Line(a, end_pos))
 
 
 
@@ -86,7 +88,35 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
     parts.append(Line(*seg[-2:]))
 
 
-    
+    print(parts[0])
+    def get_recent_vel(index):
+        if index == 0:
+            return 0
+        for part in reversed(parts[:index]):
+            if isinstance(part, Line):
+                return part.end_vel
+
+    def decelerate_to_from(max_vel, index):
+        for part in reversed(parts[:i]):
+            if isinstance(part, Line):
+                if get_recent_vel(i) > max_speed:
+                    if
+
+    for i, part in enumerate(parts):
+        if isinstance(part, Line):
+            part.start_vel = get_recent_vel(i)
+            part.acceleration = max_accel
+        elif isinstance(part, Arc):
+
+            max_speed = part.max_speed(max_accel)
+            if max_speed < get_recent_vel(i): #This is obsolete?
+                print(f"part {i} is goin way too fast at {get_recent_vel(i)} bucko, should be {max_speed}")
+                for part in reversed(parts[:i]):
+                    if isinstance(part, Line):
+                        if get_recent_vel(i) > max_speed:
+                            if
+        else:
+            raise "ouoeuoeuoe"
     
     # print(parts)
     return(parts)
