@@ -72,7 +72,7 @@ for y in range(len(blur)):
             blur[x, y] = gray[x,y]
             print(f"moved {x}, {y}")
 
-blur = cv2.GaussianBlur(blur, (21, 21), 0)
+blur = cv2.GaussianBlur(blur, (11, 11), 0)
 edges = cv2.Canny(blur, 0, 25)
 points = []
 for y in range(len(edges)):

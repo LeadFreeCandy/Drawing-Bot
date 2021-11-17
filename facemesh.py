@@ -7,7 +7,7 @@ mp_face_mesh = mp.solutions.face_mesh
 from mediapipe.python.solutions.drawing_utils import DrawingSpec
 
 drawingModule = mp.solutions.drawing_utils
-drawing_spec = drawingModule.DrawingSpec(thickness=15, color=(0,0,0))
+drawing_spec = drawingModule.DrawingSpec(thickness=30, color=(0,0,0))
 def get_facemesh(file):
     with mp_face_mesh.FaceMesh(
             static_image_mode=True,
