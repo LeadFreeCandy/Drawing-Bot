@@ -9,7 +9,7 @@ import facemesh
 
 filename = "ricardo.jpg"
 
-blur_radius = 13 # must be an odd number
+blur_radius = 521 # must be an odd number
 face_blur_radius = 5
 lower_thresh = 0
 upper_thresh = 60 # after extensive research, I am fairly certian that you only need to change this value...
@@ -99,8 +99,8 @@ for x in range((len(blur))):
 
 
 blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
-edges = cv2.Canny(gray, lower_thresh, upper_thresh)
-
+edges = cv2.Canny(blur, lower_thresh, upper_thresh)
+poop = edges
 
 cv2.imwrite('edges.jpg', edges)
 points = []
@@ -241,8 +241,7 @@ cv2.imwrite('houghlines6.jpg', img)
 cv2.imwrite('gray.jpg', gray)
 cv2.imwrite("final.jpg", blur)
 
-
-edges = cv2.Canny(gray,lower_thresh,upper_thresh)
+edges = cv2.Canny(blur,lower_thresh,upper_thresh)
 display = np.concatenate((input_img, cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)), axis=1)
 display = np.concatenate((display, img), axis=1)
 
