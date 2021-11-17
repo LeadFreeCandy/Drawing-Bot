@@ -7,7 +7,7 @@ import sys
 import pickle
 import facemesh
 
-filename = "ricardo.jpg"
+filename = "img_1.png"
 def getAngle(a, b, c):
     ang = math.degrees(math.atan2(c[1]-b[1], c[0]-b[0]) - math.atan2(a[1]-b[1], a[0]-b[0]))
     return ang + 360 if ang < 0 else ang
@@ -55,25 +55,32 @@ if filename.find(".jpg") == -1:
     # Save .jpg image
     cv2.imwrite('image.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
     input_img = cv2.imread("image.jpg")
+    facemap = facemesh.get_facemesh("image.jpg")
+
 else:
     input_img = cv2.imread(filename)
+    facemap = facemesh.get_facemesh(filename)
 
-facemap = facemesh.get_facemesh(filename)
 gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
 
-blur = cv2.GaussianBlur(gray, (41, 41), 0)
+blur = cv2.GaussianBlur(gray, (31, 31), 0)
 cv2.imwrite("blurred.jpg", blur)
 cv2.imwrite("facemesh.jpg", facemap)
 # cv2.imwrite('edges.jpg',edges)
 
-for y in range(len(blur)):
-    for x in range(len(blur[y])):
+print(len(blur))
+print(len(blur[1]))
+for x in range((len(blur))):
+
+    for y in range(len(blur[x])):
         if facemap[x,y,0] == 0:
             blur[x, y] = gray[x,y]
-            print(f"moved {x}, {y}")
+
 
 blur = cv2.GaussianBlur(blur, (11, 11), 0)
 edges = cv2.Canny(blur, 0, 25)
+
+cv2.imwrite('edges.jpg', edges)
 points = []
 for y in range(len(edges)):
     for x in range(len(edges[y])):
