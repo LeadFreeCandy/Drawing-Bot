@@ -14,7 +14,7 @@ import facemesh
 # filename = askopenfilename()
 filename = "ricardo.jpg"
 blur_radius = 1 # must be an odd number
-face_blur_radius = 1
+face_blur_radius = 7
 lower_thresh = 0
 upper_thresh = 40 # after extensive research, I am fairly certian that you only need to change this value...
 
@@ -23,16 +23,16 @@ Kernel_size=15
 low_threshold=40
 high_threshold=120
 
-rho=10
-threshold=15
-theta=np.pi/180
-minLineLength=10
-maxLineGap=1
+rho = 2
+threshold = 2 # lower is more sensitive
+theta = np.pi / 180
+minLineLength = 10
+maxLineGap = 1
 
 
 #TODO: Figure out why this breaks with a smaller number
 splitDistance = 5 # number of pixels apart when points are broken into seperate segments
-areaCut = 5
+areaCut = 2
 minSegmentLen = 10 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
 def distance(x1, y1, x2, y2):
@@ -147,10 +147,11 @@ for line in lines:
 
 cv2.imwrite("lines.jpg", frame)
 print(lines)
+cv2.imwrite('edges.jpg', edged)
 
-poop = edges.copy()
+edges = edged.copy()
 
-cv2.imwrite('edges.jpg', edges)
+
 points = []
 for y in range(len(edges)):
     for x in range(len(edges[y])):
