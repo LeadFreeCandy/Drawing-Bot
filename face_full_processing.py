@@ -6,13 +6,18 @@ import math
 import sys
 import pickle
 import facemesh
+import tkinter
+from tkinter import Tk     # from tkinter import Tk for Python 3.x
+from tkinter.filedialog import askopenfilename
 
-filename = "ricardo.jpg"
+Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+filename = askopenfilename()
 
-blur_radius = 521 # must be an odd number
+
+blur_radius = 21 # must be an odd number
 face_blur_radius = 5
 lower_thresh = 0
-upper_thresh = 60 # after extensive research, I am fairly certian that you only need to change this value...
+upper_thresh = 31 # after extensive research, I am fairly certian that you only need to change this value...
 
 #TODO: Figure out why this breaks with a smaller number
 splitDistance = 5 # number of pixels apart when points are broken into seperate segments
