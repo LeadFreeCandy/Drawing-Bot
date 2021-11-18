@@ -7,15 +7,15 @@ import sys
 import pickle
 import facemesh
 import tkinter
-from tkinter import Tk     # from tkinter import Tk for Python 3.x
+from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 
-Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
+Tk().withdraw()
 filename = askopenfilename()
 
 
-blur_radius = 21 # must be an odd number
-face_blur_radius = 5
+blur_radius = 61 # must be an odd number
+face_blur_radius = 15
 lower_thresh = 0
 upper_thresh = 31 # after extensive research, I am fairly certian that you only need to change this value...
 
