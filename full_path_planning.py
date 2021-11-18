@@ -2,7 +2,7 @@ import math
 import numpy as np
 from pieces import Line, Arc, sin, cos
 
-seg = [(0,0), (100,0), (100,3)]
+seg = [(0,0), (100,0), (110,0), (120,3)]
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
