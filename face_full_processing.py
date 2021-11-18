@@ -18,6 +18,18 @@ face_blur_radius = 1
 lower_thresh = 0
 upper_thresh = 40 # after extensive research, I am fairly certian that you only need to change this value...
 
+''' denoiseing stuff'''
+Kernel_size=15
+low_threshold=40
+high_threshold=120
+
+rho=10
+threshold=15
+theta=np.pi/180
+minLineLength=10
+maxLineGap=1
+
+
 #TODO: Figure out why this breaks with a smaller number
 splitDistance = 5 # number of pixels apart when points are broken into seperate segments
 areaCut = 5
@@ -104,13 +116,39 @@ for x in range((len(blur))):
 
 blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
 
-edges = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+
+early_edges = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
 
+blurred = cv2.GaussianBlur(early_edges, (Kernel_size, Kernel_size), 0)
 
-cv2.imwrite("cartoon_edges.jpg", edges)
+# #Canny recommended ratio upper:lower  between 2:1 or 3:1
+edged = cv2.Canny(blurred, low_threshold, high_threshold)
+#Perform hough lines probalistic transform
+lines = cv2.HoughLinesP(edged,rho,theta,threshold,minLineLength,maxLineGap)
 
-poop = edges
+frame = np.zeros((len(blur), len(blur[1])), np.uint8)
+for line in lines:
+
+    # for x1,y1,x2,y2 in line[][0]:
+    #         cv2.line(frame,(x1,y1),(x2,y2),255,2)
+
+    x1 = line[0][0] #hahahah guys r/yanderedev amirite????????
+    y1 = line[0][1]
+    x2 = line[0][2]
+    y2 = line[0][3]
+    cv2.line(frame, (x1, y1), (x2, y2), 255, 2)
+
+
+
+
+
+
+
+cv2.imwrite("lines.jpg", frame)
+print(lines)
+
+poop = edges.copy()
 
 cv2.imwrite('edges.jpg', edges)
 points = []
