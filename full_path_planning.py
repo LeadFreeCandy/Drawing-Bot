@@ -2,7 +2,7 @@ import math
 import numpy as np
 from pieces import Line, Arc, sin, cos
 
-seg = [(0,0), (0,5), (1,5)]
+seg = [(0,0), (100,0), (100,3)]
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
@@ -97,10 +97,24 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
                 return part.end_vel
 
     def decelerate_to_from(max_vel, index):
-        for part in reversed(parts[:i]):
-            if isinstance(part, Line):
-                if get_recent_vel(i) > max_speed:
-                    if
+        assert index >= 0
+
+        print(f"deceling from {index}")
+        
+
+
+        if isinstance(parts[index], Line):
+            start_val = parts[index].set_end_vel(max_vel, max_accel)
+
+            # exit()
+            if start_val is not None:
+                decelerate_to_from(start_val, index-1)
+        else:
+            decelerate_to_from(max_vel, index-1)
+        # current_vel = None
+        # for part in reversed(parts[:i]):
+        #     if isinstance(part, Line):
+        #         part.set_end_vel(max_vel, max_accel)
 
     for i, part in enumerate(parts):
         if isinstance(part, Line):
@@ -111,10 +125,8 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
             max_speed = part.max_speed(max_accel)
             if max_speed < get_recent_vel(i): #This is obsolete?
                 print(f"part {i} is goin way too fast at {get_recent_vel(i)} bucko, should be {max_speed}")
-                for part in reversed(parts[:i]):
-                    if isinstance(part, Line):
-                        if get_recent_vel(i) > max_speed:
-                            if
+
+                decelerate_to_from(max_speed, i-1)
         else:
             raise "ouoeuoeuoe"
     
