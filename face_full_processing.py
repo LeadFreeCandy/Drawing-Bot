@@ -104,22 +104,10 @@ for x in range((len(blur))):
 
 blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
 
-thresh = cv2.threshold(blur, 180, 255, cv2.THRESH_BINARY)[1]
+edges = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+            cv2.THRESH_BINARY,11,2)
 
-# morphology edgeout = dilated_mask - mask
-# morphology dilate
-kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
-dilate = cv2.morphologyEx(thresh, cv2.MORPH_DILATE, kernel)
 
-# get absolute difference between dilate and thresh
-diff = cv2.absdiff(dilate, thresh)
-
-# invert
-edges = 255 - diff
-
-cv2.imwrite("cartoon_thresh.jpg", thresh)
-cv2.imwrite("cartoon_dilate.jpg", dilate)
-cv2.imwrite("cartoon_diff.jpg", diff)
 cv2.imwrite("cartoon_edges.jpg", edges)
 
 poop = edges
