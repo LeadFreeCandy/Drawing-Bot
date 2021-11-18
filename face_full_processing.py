@@ -10,9 +10,9 @@ import tkinter
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 
-Tk().withdraw()
-filename = askopenfilename()
-
+# Tk().withdraw()
+# filename = askopenfilename()
+filename = "ricardo.jpg"
 
 blur_radius = 61 # must be an odd number
 face_blur_radius = 15
