@@ -6,9 +6,9 @@ import math
 import sys
 import pickle
 import facemesh
-import tkinter
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
+# import tkinter
+# from tkinter import Tk
+# from tkinter.filedialog import askopenfilename
 """
 writing shit down before I forget:
 the reason ricardo gets brighter is that when we shift the histogram towards the center, it is inhereantly going to make a dark image brighter, or a bright image darker (view histograms)
@@ -123,6 +123,14 @@ for x in range((len(blur))):
 
 blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
 edges = cv2.Canny(blur, lower_thresh, upper_thresh)
+faceedge = cv2.Canny(facemap, 0, 1)
+
+for x in range((len(edges))):
+
+    for y in range(len(edges[x])):
+        if faceedge[x,y] == 0:
+            edges[x, y] = 255
+
 poop = edges
 
 cv2.imwrite('edges.jpg', edges)
@@ -267,6 +275,8 @@ cv2.imwrite("final.jpg", blur)
 edges = cv2.Canny(blur,lower_thresh,upper_thresh)
 display = np.concatenate((input_img, cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)), axis=1)
 display = np.concatenate((display, img), axis=1)
+display = np.concatenate((display, blur), axis=1)
+display=np.concatenate((display,faceedge))
 
 cv2.imshow("images", display)
 cv2.waitKey(0)
