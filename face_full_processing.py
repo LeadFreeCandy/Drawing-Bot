@@ -9,17 +9,25 @@ import facemesh
 import tkinter
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+"""
+writing shit down before I forget:
+the reason ricardo gets brighter is that when we shift the histogram towards the center, it is inhereantly going to make a dark image brighter, or a bright image darker (view histograms)
+two possible ways to solve this:
+1. figure out how to normalize the two images to each other on the histogram. Maybe figure out how to use gamma? 
+2. just say fuckit and have canny run edge detection on the edge detection so that when the edge detection detects edgest made by the edge detection it can delete them (have it outline the facemesh.jpg for ez)
 
+
+"""
 # Tk().withdraw()
 # filename = askopenfilename()
 filename = "ricardo.jpg"
 
 blur_radius = 1 # must be an odd number
-face_blur_radius = 1
+face_blur_radius = 15
 lower_thresh = 0
 upper_thresh = 31 # after extensive research, I am fairly certian that you only need to change this value...
 alpha = .1 # Simple contrast control
-beta = 100    # Simple brightness control
+beta = 50    # Simple brightness control
 #TODO: Figure out why this breaks with a smaller number
 splitDistance = 5 # number of pixels apart when points are broken into seperate segments
 areaCut = 5
