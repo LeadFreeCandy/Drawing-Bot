@@ -14,11 +14,12 @@ from tkinter.filedialog import askopenfilename
 # filename = askopenfilename()
 filename = "ricardo.jpg"
 
-blur_radius = 61 # must be an odd number
-face_blur_radius = 15
+blur_radius = 1 # must be an odd number
+face_blur_radius = 1
 lower_thresh = 0
 upper_thresh = 31 # after extensive research, I am fairly certian that you only need to change this value...
-
+alpha = 1 # Contrast control (1.0-3.0)
+beta = 0 # Brightness control (0-100)
 #TODO: Figure out why this breaks with a smaller number
 splitDistance = 5 # number of pixels apart when points are broken into seperate segments
 areaCut = 5
@@ -91,7 +92,10 @@ else:
     facemap = facemesh.get_facemesh(filename)
 
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
-blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
+blur =cv2.addWeighted(gray,alpha,np.zeros(gray.shape, gray.dtype),0,beta)
+
+
+blur = cv2.GaussianBlur(blur, (blur_radius, blur_radius), 0)
 # cv2.imwrite('edges.jpg',edges)
 cv2.imwrite("blurred.jpg", blur)
 cv2.imwrite("facemesh.jpg", facemap)
