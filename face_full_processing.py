@@ -6,8 +6,12 @@ import math
 import sys
 import pickle
 import facemesh
+import tkinter
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
-filename = "ricardo.jpg"
+Tk().withdraw()
+filename = askopenfilename()
 
 blur_radius = 15 # must be an odd number
 face_blur_radius = 5
