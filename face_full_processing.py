@@ -16,7 +16,7 @@ two possible ways to solve this:
 1. figure out how to normalize the two images to each other on the histogram. Maybe figure out how to use gamma? 
 2. just say fuckit and have canny run edge detection on the edge detection so that when the edge detection detects edgest made by the edge detection it can delete them (have it outline the facemesh.jpg for ez)
 
-
+ 
 """
 # Tk().withdraw()
 # filename = askopenfilename()
