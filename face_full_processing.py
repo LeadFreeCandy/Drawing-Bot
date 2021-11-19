@@ -16,11 +16,11 @@ filename = askopenfilename()
 blur_radius = 15 # must be an odd number
 face_blur_radius = 5
 lower_thresh = 0
-upper_thresh = 120 # after extensive research, I am fairly certian that you only need to change this value...
+upper_thresh = 80 # after extensive research, I am fairly certian that you only need to change this value...
 
 #TODO: Figure out why this breaks with a smaller number
-splitDistance = 2 # number of pixels apart when points are broken into seperate segments
-areaCut = 1
+splitDistance = 5 # number of pixels apart when points are broken into seperate segments
+areaCut = 10
 minSegmentLen = 10 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
 def distance(x1, y1, x2, y2):
@@ -83,11 +83,11 @@ if filename.find(".jpg") == -1:
     # Save .jpg image
     cv2.imwrite('image.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
     input_img = cv2.imread("image.jpg")
-    facemap = facemesh.get_facemesh("image.jpg")
+    # facemap = facemesh.get_facemesh("image.jpg")
 
 else:
     input_img = cv2.imread(filename)
-    facemap = facemesh.get_facemesh(filename)
+    # facemap = facemesh.get_facemesh(filename)
 
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
 # blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
