@@ -16,11 +16,11 @@ filename = askopenfilename()
 blur_radius = 15 # must be an odd number
 face_blur_radius = 5
 lower_thresh = 0
-upper_thresh = 40 # after extensive research, I am fairly certian that you only need to change this value...
+upper_thresh = 120 # after extensive research, I am fairly certian that you only need to change this value...
 
 #TODO: Figure out why this breaks with a smaller number
-splitDistance = 5 # number of pixels apart when points are broken into seperate segments
-areaCut = 5
+splitDistance = 2 # number of pixels apart when points are broken into seperate segments
+areaCut = 1
 minSegmentLen = 10 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
 def distance(x1, y1, x2, y2):
@@ -90,23 +90,23 @@ else:
     facemap = facemesh.get_facemesh(filename)
 
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
-blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
-# cv2.imwrite('edges.jpg',edges)
-cv2.imwrite("blurred.jpg", blur)
-cv2.imwrite("facemesh.jpg", facemap)
+# blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
+# # cv2.imwrite('edges.jpg',edges)
+# cv2.imwrite("blurred.jpg", blur)
+# cv2.imwrite("facemesh.jpg", facemap)
+#
+# for x in range((len(blur))):
+#
+#     for y in range(len(blur[x])):
+#         if facemap[x,y,0] == 0:
+#             blur[x, y] = gray[x,y]
 
-for x in range((len(blur))):
 
-    for y in range(len(blur[x])):
-        if facemap[x,y,0] == 0:
-            blur[x, y] = gray[x,y]
-
-
-blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
+blur = cv2.GaussianBlur(gray, (face_blur_radius, face_blur_radius), 0)
 edges = cv2.Canny(blur, lower_thresh, upper_thresh)
 
-lines = np.zeros((len(input_img), len(input_img)), np.uint8)
-
+# lines = np.zeros((len(input_img), len(input_img)), np.uint8)
+#
 
 
 poop = edges.copy()
