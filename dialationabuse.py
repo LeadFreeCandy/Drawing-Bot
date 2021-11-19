@@ -2,6 +2,7 @@ import cv2 as cv2
 import numpy as np
 import random as rd
 import time
+import os
 import math
 import sys
 import pickle
@@ -24,24 +25,18 @@ if filename.find(".jpg") == -1:
     # Save .jpg image
     cv2.imwrite('image.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
     input_img = cv2.imread("image.jpg")
-    facemap = facemesh.get_facemesh("image.jpg")
+    # facemap = facemesh.get_facemesh("image.jpg")
 
 else:
     input_img = cv2.imread(filename)
-    facemap = facemesh.get_facemesh(filename)
+    # facemap = facemesh.get_facemesh(filename)
 
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
 
 
 edges = cv2.Canny(blur,lower_thresh,upper_thresh)
+cv2.imwrite('image.jpg', edges, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
 
-kernel = np.ones((3,3), np.uint8)
-
-new_edges = cv2.dilate(edges, kernel, iterations=1)
-new_edges = cv2.erode(new_edges, kernel, iterations=1)
-
-cv2.imshow("source", input_img)
-cv2.imshow("result", edges)
-cv2.imshow("new result", new_edges)
-cv2.waitKey(0)
+os.system("""convert image.jpg -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -enhance -negate -lat 50x50+1% -morphology Thinning:-1 Skeleton -define connected-components:area-threshold=100 -define connected-components:mean-color=true -connected-components 4 -morphology dilate octagon:3 
+result.png""")
