@@ -36,6 +36,12 @@ blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
 
 edges = cv2.Canny(blur,lower_thresh,upper_thresh)
 
+kernel = np.ones((3,3), np.uint8)
+
+new_edges = cv2.dilate(edges, kernel, iterations=1)
+new_edges = cv2.erode(new_edges, kernel, iterations=1)
+
 cv2.imshow("source", input_img)
 cv2.imshow("result", edges)
+cv2.imshow("new result", new_edges)
 cv2.waitKey(0)
