@@ -89,21 +89,21 @@ else:
     input_img = cv2.imread(filename)
     facemap = facemesh.get_facemesh(filename)
 
-# gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
-# blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
-# # cv2.imwrite('edges.jpg',edges)
-# cv2.imwrite("blurred.jpg", blur)
-# cv2.imwrite("facemesh.jpg", facemap)
-#
-# for x in range((len(blur))):
-#
-#     for y in range(len(blur[x])):
-#         if facemap[x,y,0] == 0:
-#             blur[x, y] = gray[x,y]
-#
-#
-# blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
-# edges = cv2.Canny(blur, lower_thresh, upper_thresh)
+gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
+blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
+# cv2.imwrite('edges.jpg',edges)
+cv2.imwrite("blurred.jpg", blur)
+cv2.imwrite("facemesh.jpg", facemap)
+
+for x in range((len(blur))):
+
+    for y in range(len(blur[x])):
+        if facemap[x,y,0] == 0:
+            blur[x, y] = gray[x,y]
+
+
+blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
+edges = cv2.Canny(blur, lower_thresh, upper_thresh)
 
 lines = np.zeros((len(input_img), len(input_img)), np.uint8)
 
