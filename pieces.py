@@ -39,6 +39,7 @@ class Line():
         else:
             return None
 
+
     def find_start_vel(self, accel, vf):
         try:
             return math.sqrt(vf ** 2 - 2 * accel * self.get_len())
@@ -46,18 +47,22 @@ class Line():
             return 0
     def find_accel(self, vf):
         return (vf ** 2 - self.start_vel ** 2) / (2 * self.get_len())
+    # def find_accel2(self, vi, vf):
+    #     (vf ** 2 - vi ** 2) / (2 * self.get_len())
+    
     def set_end_vel(self, vel, max_accel):
         # if just modified accel, return None
         # if modified accel and start_vel, return start_vel
 
         # self.end_vel = vel
         min_start_vel = self.find_start_vel(max_accel, vel) # THIS BROKE
+        # accel = self.find_accel2()
         # print(f"{max_accel=}")
         # print(f"{vel=}")
         # print(f"{self.end_vel=}")
         # print(f"{self.start_vel=}")
         # print(f"{min_start_vel=}")
-        if min_start_vel < vel:
+        if min_start_vel > vel:
             self.acceleration = self.find_accel(vel)
             return None
         else:
@@ -100,6 +105,7 @@ class Arc():
 
         return vel ** 2 / self.radius
 
+    
     def max_speed(self, accel):
         return math.sqrt(accel * self.radius)
     def get_points_crude(self, num_points):

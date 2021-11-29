@@ -87,6 +87,8 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
 
     parts.append(Line(*seg[-2:]))
 
+    #Add a thing that collapses lines
+
 
     print(parts[0])
     def get_recent_vel(index):
