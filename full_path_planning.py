@@ -3,6 +3,7 @@ import numpy as np
 from pieces import Line, Arc, sin, cos
 
 seg = [(0,0), (100,0), (110,0), (120,3)]
+# seg = [(0,0), (0,1), (1,1), (1,2)]
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
@@ -96,6 +97,9 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
             if isinstance(part, Line):
                 return part.end_vel
 
+    def ratio_points(point1, point2, ratio):
+        return (point1[0] * (1-ratio) + point2[0] * ratio, point1[1] * (1-ratio) + point2[1] * ratio)
+
     def decelerate_to_from(max_vel, index):
         assert index >= 0
 
@@ -116,6 +120,7 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
         #     if isinstance(part, Line):
         #         part.set_end_vel(max_vel, max_accel)
 
+
     for i, part in enumerate(parts):
         if isinstance(part, Line):
             part.start_vel = get_recent_vel(i)
@@ -131,6 +136,14 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
             raise "ouoeuoeuoe"
     
     # print(parts)
+
+    def optimize_line(line):
+
+
+    for part in parts:
+        if isinstance(part, Line) and abs(part.acceleration) != max_accel:
+
+
     return(parts)
 
 def plot_path(parts):
