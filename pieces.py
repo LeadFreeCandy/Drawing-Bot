@@ -42,7 +42,7 @@ class Line():
 
     def find_start_vel(self, accel, vf):
         try:
-            return math.sqrt(vf ** 2 - 2 * accel * self.get_len())
+            return math.sqrt(vf ** 2 + 2 * accel * self.get_len())
         except ValueError:
             return 0
     def find_accel(self, vf):
@@ -62,7 +62,7 @@ class Line():
         # print(f"{self.end_vel=}")
         # print(f"{self.start_vel=}")
         # print(f"{min_start_vel=}")
-        if min_start_vel > vel:
+        if min_start_vel > self.start_vel:
             self.acceleration = self.find_accel(vel)
             return None
         else:
