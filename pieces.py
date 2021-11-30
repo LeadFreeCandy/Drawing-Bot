@@ -10,6 +10,8 @@ def cos(degrees):
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
 
+def ratio_points(point1, point2, ratio):
+        return (point1[0] * (1-ratio) + point2[0] * ratio, point1[1] * (1-ratio) + point2[1] * ratio)
 
 
 
@@ -31,11 +33,23 @@ class Line():
     def get_len(self):
         return distance(*self.start_pos, *self.end_pos)
 
+    def get_total_time(self):
+        return -(self.start_vel - math.sqrt(self.start_vel ** 2 + 2 * self.acceleration * self.get_len())) / self.acceleration
+    
+    def get_pos_at_time(self, t):
+        dist = self.start_vel * t + (self.acceleration * t ** 2)/2
+        ratio = dist/self.get_len()
+        return ratio_points(self.start_pos, self.end_pos, ratio)
+        # return self.start_vel * t + (self.acceleration * t ** 2)/2
+
 
     @property
     def end_vel(self):
         if self.start_vel is not None:
-            return math.sqrt(self.start_vel ** 2 + 2 * self.acceleration * self.get_len())
+            try:
+                return math.sqrt(self.start_vel ** 2 + 2 * self.acceleration * self.get_len())
+            except ValueError:
+                return 0 #TODO fix, this is prob shit
         else:
             return None
 
@@ -96,14 +110,37 @@ class Arc():
         self.radius = radius
         self.start_angle = start_angle
         self.end_angle = end_angle
-        pass
+        self.vel = None
 
     def __repr__(self):
         return str(f"<Arc centered at {self.center_pos}, from {self.start_angle} to {self.end_angle} with radius {self.radius}>")
 
     def max_accel(self, vel):
-
         return vel ** 2 / self.radius
+    
+    def get_total_time(self):
+        return self.radius * math.radians(abs(self.end_angle-self.start_angle)) / self.vel
+
+    def get_pos_at_time(self, t):
+
+        if self.end_angle - self.start_angle < -180:
+            self.end_angle += 360
+        elif self.end_angle - self.start_angle > 180:
+            self.end_angle -= 360
+
+        angular_vel = math.degrees(self.vel / self.radius) # i dont think this is right
+        angle_delta = angular_vel * t
+
+        if self.start_angle < self.end_angle:
+            dir = 1
+        else:
+            dir = -1
+
+        angle = self.start_angle + angle_delta * dir
+
+
+        return (cos(angle) * self.radius + self.center_pos[0], sin(angle) * self.radius + self.center_pos[1])
+        # return self.start_vel * t + (self.acceleration * t ** 2)/2
 
     
     def max_speed(self, accel):

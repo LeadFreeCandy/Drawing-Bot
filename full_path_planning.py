@@ -2,7 +2,7 @@ import math
 import numpy as np
 from pieces import Line, Arc, sin, cos
 
-seg = [(0,0), (100,0), (110,0), (120,3)]
+seg = [(0,0), (1,0), (1,1), (2,1)]
 # seg = [(0,0), (0,1), (1,1), (1,2)]
 
 def distance(x1, y1, x2, y2):
@@ -43,8 +43,10 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
             
         else:
             # l = (max_accel * ab_dist - velocity ** 2) / (3 * max_accel) # math n shit
-
-            lr = min(ab_dist, bc_dist/2) #TODO: decide if max radius should govrn lr or r
+            if i == 0:
+                lr = min(ab_dist/2, bc_dist/2)
+            else:
+                lr = min(ab_dist, bc_dist/2) #TODO: decide if max radius should govrn lr or r
             r = (2 * sin(abc_angle/2) * lr) / abs(2 * sin(90-abc_angle/2))
             
             if r > max_radius:
@@ -98,6 +100,10 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
         for part in reversed(parts[:index]):
             if isinstance(part, Line):
                 return part.end_vel
+        return 0
+
+    def get_ratio(va, vb, a, l):
+        return (vb ** 2 - va ** 2)/(4* a * l) + 1/2
 
     def ratio_points(point1, point2, ratio):
         return (point1[0] * (1-ratio) + point2[0] * ratio, point1[1] * (1-ratio) + point2[1] * ratio)
@@ -131,7 +137,7 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
 
             max_speed = part.max_speed(max_accel)
             if max_speed < get_recent_vel(i): #This is obsolete?
-                print(f"part {i} is goin way too fast at {get_recent_vel(i)} bucko, should be {max_speed}")
+                # print(f"part {i} is goin way too fast at {get_recent_vel(i)} bucko, should be {max_speed}")
 
                 decelerate_to_from(max_speed, i-1)
         else:
@@ -140,34 +146,107 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
     # print(parts)
 
     def optimize_line(line):
+        ratio = get_ratio(line.start_vel, line.end_vel, max_accel, line.get_len())
+        midpoint = ratio_points(line.start_pos, line.end_pos, ratio)
 
+        l1 = Line(line.start_pos, midpoint, line.start_vel, max_accel)
+        l2 = Line(midpoint, line.end_pos, l1.end_vel, -max_accel)
 
-    for part in parts:
+        return l1,l2
+        
+
+    for i, part in enumerate(parts):
         if isinstance(part, Line) and abs(part.acceleration) != max_accel:
+            parts[i:i+1] = optimize_line(part)
+
+    for i, part in enumerate(parts): 
+        if isinstance(part, Arc):
+            vel = None
+            for part in reversed(parts[0:i]):
+                if isinstance(part, Line):
+                    vel = part.end_vel
+                    break
+
+            assert vel is not None
+            parts[i].vel = vel
 
 
+    # lines = optimize_line(parts[0])
     return(parts)
+
+def chunks_to_points(parts, freq):
+    period = 1/freq
+    points = []
+    total_time = sum(part.get_total_time() for part in parts)
+
+    # print(f"part 1 takes {parts[3].get_total_time()}")
+    for t in np.arange(0,total_time, period):
+        t2 = t
+        for i, part in enumerate(parts):
+            if t2 - part.get_total_time() > 0:
+                t2 -= part.get_total_time()
+            else:
+                # print(f"gooching from part {i} at time {t}")
+                # if isinstance(part, Line):
+                points.append(part.get_pos_at_time(t2))
+                break
+
+    return points
+
+def calc_path(in_segments, max_accel, max_radius, freq):
+    segments = []
+    for seg in in_segments:
+        parts = calc_segment(seg, max_accel, max_radius)
+        points = chunks_to_points(parts, freq)
+        segments.append(points)
+
+    return segments
+
+
 
 def plot_path(parts):
     import matplotlib.pyplot as plt
 
-    # x,y = zip(*points)
-    points = []
-    for chunk in parts:
-        points += chunk.get_points_crude(100)
 
-    x = [point[0] for point in points]
+    points = []
+    # for chunk in parts:
+    #     points += chunk.get_points_crude(100)
+
+    # x = [point[0] for point in points]
+
+    # print(parts[3].get_total_time())
+
+    points = chunks_to_points(parts, 15)
+
+    plt.scatter(*zip(*points)) 
+    
+    plt.show()
+
+def plot_path_full(segments):
+    import matplotlib.pyplot as plt
+    points = []
+
+    for seg in segments:
+        for point in seg:
+            points.append(point)
 
     plt.scatter(*zip(*points))
     plt.show()
-
+    
 
 
 
 if __name__ == "__main__":
+    import pickle
     # print(calc_segment(seg, radius=))
-    parts = calc_segment(seg, 1, 10)
-    print(parts)
-    plot_path(parts)
+    with open("path.pickle", 'rb') as file:
+        segments = pickle.load(file)
+        parts = calc_path(segments, 3, 1, 10)
+        plot_path_full(parts)
+
+    # parts = calc_segment(seg, 1, 10)
+    # print(parts)
+    # plot_path(parts)
 
 
+[[(0,0),(0,0)],[(0,0),(0,0)]]
