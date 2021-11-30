@@ -5,23 +5,17 @@ import time
 import math
 import sys
 import pickle
-import facemesh
-import tkinter
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
 
-Tk().withdraw()
-filename = askopenfilename()
+filename = "s1.jpg"
 
-blur_radius = 15 # must be an odd number
-face_blur_radius = 5
+blur_radius = 19 # must be an odd number
 lower_thresh = 0
-upper_thresh = 40 # after extensive research, I am fairly certian that you only need to change this value...
+upper_thresh = 60 # after extensive research, I am fairly certian that you only need to change this value...
 
-#TODO: Figure out why this breaks with a smaller number
-splitDistance = 5 # number of pixels apart when points are broken into seperate segments
-areaCut = 5
-minSegmentLen = 10 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
+#TODO: Figure out why this breaks with a smaller number 
+splitDistance = 20 # number of pixels apart when points are broken into seperate segments 
+areaCut = 10
+minSegmentLen = 30 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
@@ -83,30 +77,15 @@ if filename.find(".jpg") == -1:
     # Save .jpg image
     cv2.imwrite('image.jpg', image, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
     input_img = cv2.imread("image.jpg")
-    facemap = facemesh.get_facemesh("image.jpg")
-
 else:
     input_img = cv2.imread(filename)
-    facemap = facemesh.get_facemesh(filename)
 
 gray = cv2.cvtColor(input_img,cv2.COLOR_BGR2GRAY)
-blur = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
+gray = cv2.GaussianBlur(gray, (blur_radius, blur_radius), 0)
+edges = cv2.Canny(gray, lower_thresh, upper_thresh)
 # cv2.imwrite('edges.jpg',edges)
-cv2.imwrite("blurred.jpg", blur)
-cv2.imwrite("facemesh.jpg", facemap)
-
-for x in range((len(blur))):
-
-    for y in range(len(blur[x])):
-        if facemap[x,y,0] == 0:
-            blur[x, y] = gray[x,y]
 
 
-blur = cv2.GaussianBlur(blur, (face_blur_radius, face_blur_radius), 0)
-edges = cv2.Canny(blur, lower_thresh, upper_thresh)
-poop = edges
-
-cv2.imwrite('edges.jpg', edges)
 points = []
 for y in range(len(edges)):
     for x in range(len(edges[y])):
@@ -203,7 +182,7 @@ for seg in segments:
         # print(seg[i])
         if distance(seg[i][0], seg[i][1], seg[i+1][0], seg[i+1][1]) < 2000:
             x1,y1,x2,y2 = seg[i][0], seg[i][1], seg[i+1][0], seg[i+1][1]
-
+            
             cv2.line(img,(x1,y1), (x1,y1), (0,0,0), 4)
             cv2.line(img,(x2,y2), (x2,y2), (0,0,0), 4)
             cv2.line(img,(x1,y1),(x2,y2),color,2)
@@ -242,10 +221,10 @@ with open("path.pickle", 'wb') as file:
 
 print("{} segments with a total of {} points".format(len(segments), sum(len(seg) for seg in segments)))
 cv2.imwrite('houghlines6.jpg', img)
-cv2.imwrite('gray.jpg', gray)
-cv2.imwrite("final.jpg", blur)
 
-edges = cv2.Canny(blur,lower_thresh,upper_thresh)
+
+
+edges = cv2.Canny(gray,lower_thresh,upper_thresh)
 display = np.concatenate((input_img, cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)), axis=1)
 display = np.concatenate((display, img), axis=1)
 
