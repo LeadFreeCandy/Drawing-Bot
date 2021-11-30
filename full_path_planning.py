@@ -18,7 +18,7 @@ def getAngle(a, b, c):
 
 
 
-def calc_segment(seg, max_accel, max_radius, john = "dumb"):
+def calc_segment(seg, max_accel, max_radius, john = "dumb"): #not actually max radius tho
 
     # R = V^2/A
 
@@ -48,14 +48,14 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
         else:
             # l = (max_accel * ab_dist - velocity ** 2) / (3 * max_accel) # math n shit
             if i == 0:
-                lr = min(ab_dist/2, bc_dist/2)
+                lr = min(ab_dist/2, bc_dist/2, max_radius)
             else:
-                lr = min(ab_dist, bc_dist/2) #TODO: decide if max radius should govrn lr or r
+                lr = min(ab_dist, bc_dist/2, max_radius) #TODO: decide if max radius should govrn lr or r
             r = (2 * sin(abc_angle/2) * lr) / abs(2 * sin(90-abc_angle/2))
             
-            if r > max_radius:
-                r = max_radius
-                lr = (r * abs(2 * sin(90 - abc_angle/2)))/ (2 * sin(abc_angle/2))
+            # if r > max_radius:
+            #     r = max_radius
+            #     lr = (r * abs(2 * sin(90 - abc_angle/2)))/ (2 * sin(abc_angle/2))
 
             l = ab_dist - lr
             
