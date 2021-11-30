@@ -210,8 +210,7 @@ for i, seg in enumerate(segments):
         segments[i][j] = (point[0]/max_size,point[1]/max_size)
 
 
-with open("path.pickle", 'wb') as file:
-    pickle.dump(segments, file)
+
 
 # import os
 # import sys
@@ -233,12 +232,15 @@ edges = cv2.Canny(gray,lower_thresh,upper_thresh)
 display = np.concatenate((input_img, cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)), axis=1)
 display = np.concatenate((display, img), axis=1)
 
+new_points = calc_path(segments, 1, .1, 10)
+with open("path.pickle", 'wb') as file:
+    pickle.dump(new_points, file)
+
+
 cv2.imshow("images", display)
 cv2.waitKey(0)
 
-new_points = calc_path(segments, 1, 1, 10)
 plot_path_full(new_points)
-
 
 
 
