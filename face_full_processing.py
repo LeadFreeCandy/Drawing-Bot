@@ -8,7 +8,7 @@ import pickle
 
 from full_path_planning import calc_path, plot_path, plot_path_full
 
-filename = "img_2.png"
+filename = "s1.jpg"
 def getAngle(a, b, c):
     ang = math.degrees(math.atan2(c[1]-b[1], c[0]-b[0]) - math.atan2(a[1]-b[1], a[0]-b[0]))
     return ang + 360 if ang < 0 else ang
@@ -210,8 +210,8 @@ edges = cv2.Canny(gray,0,40)
 display = np.concatenate((input_img, cv2.cvtColor(edges,cv2.COLOR_GRAY2RGB)), axis=1)
 display = np.concatenate((display, img), axis=1)
 
-# cv2.imshow("images", display)
-# cv2.waitKey(0)
+cv2.imshow("images", display)
+cv2.waitKey(0)
 
 new_points = calc_path(segments, 1, 1, 10)
 plot_path_full(new_points)

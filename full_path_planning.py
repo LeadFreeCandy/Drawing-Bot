@@ -32,9 +32,13 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
 
         ab_dist = distance(*a, *b)
         bc_dist = distance(*b, *c)
+
+        # if ab_dist == 0:
+        #     continue
+
         abc_angle = getAngle(a,b,c)
 
-        if abc_angle == 180:
+        if abc_angle == 180 or abc_angle == 360 or abc_angle == 0:
             l = ab_dist
             r = 0
             lr = 0
@@ -55,6 +59,7 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
 
             l = ab_dist - lr
             
+            
 
             print(f"{r = }, {l = }")
 
@@ -73,19 +78,19 @@ def calc_segment(seg, max_accel, max_radius, john = "dumb"):
 
 
 
-        shifter = (-(b[1]-a[1])/ab_dist * r, (b[0]-a[0])/ab_dist *r)
-        circle_center = None
-        if abc_angle > 180:
-            circle_center = (end_pos[0]+shifter[0], end_pos[1]+shifter[1])
-        elif abc_angle < 180:
-            circle_center = (end_pos[0]-shifter[0], end_pos[1]-shifter[1])
-        
+            shifter = (-(b[1]-a[1])/ab_dist * r, (b[0]-a[0])/ab_dist *r)
+            circle_center = None
+            if abc_angle > 180:
+                circle_center = (end_pos[0]+shifter[0], end_pos[1]+shifter[1])
+            elif abc_angle < 180:
+                circle_center = (end_pos[0]-shifter[0], end_pos[1]-shifter[1])
+            
 
-        if circle_center:
-            # points += [circle_center] # make sure axe dis shit
-            circle_center_offset = (circle_center[0]+1, circle_center[1])
-            # points += arc_points(circle_center, r, getAngle(circle_center_offset, circle_center, end_pos), getAngle(circle_center_offset, circle_center, new_pos), 100)
-            parts.append(Arc(circle_center, r, getAngle(circle_center_offset, circle_center, end_pos), getAngle(circle_center_offset, circle_center, new_pos)))
+            if circle_center:
+                # points += [circle_center] # make sure axe dis shit
+                circle_center_offset = (circle_center[0]+1, circle_center[1])
+                # points += arc_points(circle_center, r, getAngle(circle_center_offset, circle_center, end_pos), getAngle(circle_center_offset, circle_center, new_pos), 100)
+                parts.append(Arc(circle_center, r, getAngle(circle_center_offset, circle_center, end_pos), getAngle(circle_center_offset, circle_center, new_pos)))
 
 
     parts.append(Line(*seg[-2:]))
@@ -216,6 +221,7 @@ def plot_path(parts):
 
     # print(parts[3].get_total_time())
 
+
     points = chunks_to_points(parts, 15)
 
     plt.scatter(*zip(*points)) 
@@ -241,8 +247,11 @@ if __name__ == "__main__":
     # print(calc_segment(seg, radius=))
     with open("path.pickle", 'rb') as file:
         segments = pickle.load(file)
+        # segments = [[(0,0), (1,0), (1,1), (2,1)]]
+        # for i in range(0,len(segments)):
         parts = calc_path(segments, 3, 1, 10)
         plot_path_full(parts)
+    
 
     # parts = calc_segment(seg, 1, 10)
     # print(parts)
