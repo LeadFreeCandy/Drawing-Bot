@@ -6,6 +6,7 @@ import math
 import sys
 import pickle
 
+
 filename = "s1.jpg"
 
 blur_radius = 19 # must be an odd number
@@ -16,6 +17,10 @@ upper_thresh = 60 # after extensive research, I am fairly certian that you only 
 splitDistance = 20 # number of pixels apart when points are broken into seperate segments 
 areaCut = 10
 minSegmentLen = 30 # minimum number of points (processed proir to angle and distance cuts) in a segment in order for it to be preserved
+
+from full_path_planning import calc_path, plot_path, plot_path_full
+
+
 
 def distance(x1, y1, x2, y2):
     return (((x2-x1) ** 2 + (y2 - y1) ** 2) ** .5)
@@ -230,6 +235,9 @@ display = np.concatenate((display, img), axis=1)
 
 cv2.imshow("images", display)
 cv2.waitKey(0)
+
+new_points = calc_path(segments, 1, 1, 10)
+plot_path_full(new_points)
 
 
 

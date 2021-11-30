@@ -6,7 +6,21 @@
     "configurations": [
         {
             "name": "Python: Current File",
-            "type": "python3",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python3.8",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
