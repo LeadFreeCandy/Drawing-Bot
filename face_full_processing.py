@@ -236,9 +236,9 @@ new_points = calc_path(segments, 1, .1, 10)
 with open("path.pickle", 'wb') as file:
     pickle.dump(new_points, file)
 
-
-cv2.imshow("images", display)
-cv2.waitKey(0)
+#
+# cv2.imshow("images", display)
+# cv2.waitKey(0)
 
 plot_path_full(new_points)
 
